@@ -7,6 +7,8 @@ class Syslogger
 
   attr_reader :level, :ident, :options, :facility
 
+  attr_accessor :prefix
+
   MAPPING = {
     Logger::DEBUG => Syslog::LOG_DEBUG,
     Logger::INFO => Syslog::LOG_INFO,
@@ -94,6 +96,9 @@ class Syslogger
     message.strip!
     message.gsub!(/%/, '%%') # syslog(3) freaks on % (printf)
     message.gsub!(/\e\[[^m]*m/, '') # remove useless ansi color codes
+    if self.prefix
+      message = "#{self.prefix}#{message}"
+    end
     message
   end
 end

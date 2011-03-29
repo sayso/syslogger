@@ -29,6 +29,24 @@ describe "Syslogger" do
     logger << "yop"
   end
 
+  describe "prefix" do
+    before do
+      @logger = Syslogger.new("my_app", Syslog::LOG_PID, Syslog::LOG_USER)
+      @logger.prefix = "[my_app_prefix]"
+    end
+
+    it "should rensure that prefix was set" do
+      @logger.prefix.should == "[my_app_prefix]"
+    end
+
+    it "should add prefix to logged message" do
+      Syslog.should_receive(:open).with("my_app", Syslog::LOG_PID, Syslog::LOG_USER).and_yield(syslog=mock("syslog", :mask= => true))
+      syslog.should_receive(:log).with(Syslog::LOG_INFO, "#{@logger.prefix}message")
+      @logger.add(Logger::INFO, "message")
+    end
+
+  end
+
   describe "add" do
     before do
       @logger = Syslogger.new("my_app", Syslog::LOG_PID, Syslog::LOG_USER)
