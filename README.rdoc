@@ -11,10 +11,19 @@ Contrary to the SyslogLogger library, you can specify the facility and the syslo
   
   # Will send all messages to the local0 facility, adding the process id in the message
   logger = Syslogger.new("app_name", Syslog::LOG_PID, Syslog::LOG_LOCAL0)
-  
+
+  # Log all messages with given prefix. Might be combined with middleware to
+  # have request information in each log message.
+  # See https://gist.github.com/892489 for middleware example.
+  logger.prefix = '[PREFIX]'
+
   # Send messages that are at least of the Logger::INFO level
   logger.level = Logger::INFO # use Logger levels
-  
+
+  # Logs all messages with given prefix, useful to have e.g. request ip
+  # See https://gist.github.com/892489 for middleware example
+  logger.prefix = Logger::INFO # use Logger levels
+
   logger.debug "will not appear"
   logger.info "will appear"
   logger.warn "will appear"
